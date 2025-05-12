@@ -1,0 +1,32 @@
+namespace VieClusInfo;
+
+table Partition {
+    graph_metadata: GraphMetadata;
+    runtime: RunTime;
+    memory_consumption: MemoryConsumption;
+    clustering_metrics: ClusteringMetrics;
+
+}
+
+table GraphMetadata {
+    filename: string;
+    num_nodes: ulong;
+    num_edges: ulong;
+}
+
+table RunTime {
+    io_time: double;
+    mapping_time: double;
+    total_time: double;
+}
+
+table ClusteringMetrics{
+    score: double;
+    clustering_amount: ulong;
+}
+
+table MemoryConsumption{
+    overall_max_rss: long;
+}
+
+root_type Partition;

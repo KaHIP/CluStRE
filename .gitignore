@@ -1,0 +1,17 @@
+/build
+/deploy
+/.idea
+/cmake-build-debug
+/.vscode
+results.txt
+/experiments/no_vieclus
+/experiments/with_vieclus
+/experiments/commands.txt
+/experiments/commands_vieclus.txt
+/experiments/restream
+/experiments/label_prop
+/experiments/light
+/experiments/csv_files
+server/
+/csv_files
+ground_truth/

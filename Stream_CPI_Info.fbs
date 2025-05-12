@@ -1,0 +1,56 @@
+namespace StreamCPIInfo;
+
+table Partition {
+    graph_metadata: GraphMetadata;
+    partition_configuration: PartitionConfiguration;
+    runtime: RunTime;
+    memory_consumption: MemoryConsumption;
+    partition_metrics: PartitionMetrics;
+    clustering_metrics: ClusteringMetrics;
+
+}
+
+table GraphMetadata {
+    filename: string;
+    num_nodes: ulong;
+    num_edges: ulong;
+    max_degree: ulong;
+}
+
+table PartitionConfiguration {
+    k: uint;
+    seed: int;
+    input_balance: double;
+    set_part_zero: int;
+    rle_length: ulong;
+    kappa: double;
+    cluster_frac: double;
+}
+
+table RunTime {
+    io_time: double;
+    mapping_time: double;
+    total_time: double;
+    ext_alg_time: double;
+}
+
+table PartitionMetrics{
+    edge_cut: ulong;
+    balance: double;
+}
+
+table ClusteringMetrics{
+    score: double;
+    clustering_amount: ulong;  // New attribute
+    active_nodes_amount: ulong;
+}
+
+table MemoryConsumption{
+    uncompressed_vec_bytes: ulong;
+    rle_vector_bytes: ulong;
+    rle_vector_mb: double;
+    relative_compression: double;
+    overall_max_rss: long;
+}
+
+root_type Partition;

@@ -1,0 +1,16 @@
+[submodule "extern/stxxl"]
+	path = extern/stxxl
+	url = https://github.com/stxxl/stxxl.git
+[submodule "extern/KaGen"]
+	path = extern/KaGen
+	url = https://github.com/Shaip161/KaGen.git
+[submodule "extern/VieClus"]
+	path = extern/VieClus
+	url = https://github.com/Shaip161/VieClus.git
+	branch = clustre_integration
+[submodule "extern/robin-hood-hashing"]
+	path = extern/robin-hood-hashing
+	url = https://github.com/martinus/robin-hood-hashing.git
+[submodule "extern/abseil"]
+	path = extern/abseil
+	url = https://github.com/abseil/abseil-cpp.git
