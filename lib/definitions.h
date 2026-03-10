@@ -19,8 +19,9 @@
 #include "stdio.h"
 
 
-// #include <x86intrin.h> removed to compile on rasp. pi
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 #include <x86intrin.h>
+#endif
 #include <cstdint>
 /* #include <nmmintrin.h> */
 #define UPPER_MASK 0xffff0000 /* most significant w-r bits */
