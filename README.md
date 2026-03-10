@@ -1,73 +1,237 @@
-# CluStRE: Streaming Graph Clustering Algorithm with Multi-Stage Refinement
+CluStRE v1.0
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![C++](https://img.shields.io/badge/C++-20-blue.svg)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.24+-064F8C.svg)](https://cmake.org/)
+[![GitHub Release](https://img.shields.io/github/v/release/KaHIP/CluStRE)](https://github.com/KaHIP/CluStRE/releases/latest)
+[![Homebrew](https://img.shields.io/badge/Homebrew-available-orange)](https://github.com/KaHIP/homebrew-kahip)
+[![Linux](https://img.shields.io/badge/Linux-supported-success.svg)](https://github.com/KaHIP/CluStRE)
+[![macOS](https://img.shields.io/badge/macOS-supported-success.svg)](https://github.com/KaHIP/CluStRE)
+[![GitHub Stars](https://img.shields.io/github/stars/KaHIP/CluStRE)](https://github.com/KaHIP/CluStRE/stargazers)
+[![GitHub Issues](https://img.shields.io/github/issues/KaHIP/CluStRE)](https://github.com/KaHIP/CluStRE/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/KaHIP/CluStRE)](https://github.com/KaHIP/CluStRE/commits)
+[![arXiv](https://img.shields.io/badge/arXiv-2502.06879-b31b1b.svg)](https://arxiv.org/abs/2502.06879)
+[![Heidelberg University](https://img.shields.io/badge/Heidelberg-University-c1002a)](https://www.uni-heidelberg.de)
+=====
 
-## What is **CluStRE**? 
-**CluStRE** is a novel streaming graph clustering algorithm that balances computational efficiency with high-quality clustering using multi-stage refinement. Unlike traditional in-memory clustering approaches, **CluStRE** processes graphs in a streaming setting, significantly reducing memory overhead while leveraging re-streaming and evolutionary heuristics to improve solution quality. Our method dynamically constructs a quotient graph, enabling modularity-based optimization while efficiently handling large-scale graphs. We introduce multiple configurations of **CluStRE** to provide trade-offs between speed, memory consumption, and clustering quality. Experimental evaluations demonstrate that **CluStRE** improves solution quality by 89.8%, operates 2.6X faster, and uses less than two-thirds of the memory required by the state-of-the-art streaming algorithm on average. Moreover, our strongest mode enhances solution quality by up to 150% on average. With this, **CluStRE** achieves comparable solution quality to in-memory algorithms, i.e. over 96% of the quality of clustering approaches, including Louvain, effectively bridging the gap between streaming and traditional clustering methods.
+**CluStRE** (Streaming Graph Clustering with Multi-Stage Refinement) is a streaming graph clustering algorithm that achieves near in-memory quality while using a fraction of the memory. Part of the [KaHIP](https://github.com/KaHIP) organization.
 
-## Installation Notes
+| | |
+|:--|:--|
+| **What it solves** | Graph clustering on graphs too large to fit in memory |
+| **Objective** | Maximize [modularity](https://en.wikipedia.org/wiki/Modularity_(networks)) via streaming |
+| **Key results** | 89.8% better quality, 2.6x faster, <2/3 memory vs. state-of-the-art streaming; achieves >96% of in-memory quality (Louvain) |
+| **Algorithm** | Streaming assignment + quotient graph optimization + restreaming with local search |
+| **Interfaces** | CLI |
+| **Requires** | MPI, C++20 compiler, CMake 3.24+ |
+
+## Quick Start
+
+### Install
+
+| Method | Command |
+|:-------|:--------|
+| **Homebrew** (macOS/Linux) | `brew install KaHIP/kahip/clustre` |
+| **Build from source** | `./compile.sh` |
+
+### Run
+
+```bash
+# Fast streaming clustering (light mode)
+./deploy/clustre mygraph.graph --one_pass_algorithm=modularity --mode=light
+
+# Best quality (strong mode: streaming + evolutionary + local search refinement)
+./deploy/clustre mygraph.graph --one_pass_algorithm=modularity --ext_clustering_algorithm=VieClus --mode=strong
+```
+
+---
+
+## Modes
+
+CluStRE offers four modes that trade off speed, memory, and quality:
+
+| Mode | Phases | Use case |
+|:-----|:-------|:---------|
+| `light` | One-pass streaming | Fastest, lowest memory |
+| `light_plus` | Streaming + restream with local search | Good balance of speed and quality |
+| `evo` | Streaming + memetic quotient graph clustering | High quality without restreaming |
+| `strong` | Streaming + memetic clustering + restream with local search | Best quality, highest resource usage |
+
+---
+
+## Command Line Usage
+
+```
+./deploy/clustre <graph-file> [options]
+```
+
+### Required options
+
+| Option | Description |
+|:-------|:-----------|
+| `<graph-file>` | Path to graph in METIS format (see [Graph Format](#graph-format)) |
+| `--one_pass_algorithm=modularity` | Objective function for streaming (modularity is built-in) |
+| `--mode=<mode>` | Clustering mode: `light`, `light_plus`, `evo`, `strong` |
+
+### Common options
+
+| Option | Default | Description |
+|:-------|:--------|:-----------|
+| `--ext_clustering_algorithm=VieClus` | `VieClus` | In-memory algorithm for quotient graph (used in `evo` and `strong` modes) |
+| `--ext_algorithm_time=<seconds>` | `300` | Time limit for the in-memory clustering on the quotient graph |
+| `--output_path=<directory>` | current dir | Directory for output files |
+| `--suppress_file_output` | off | Suppress writing the clustering assignment file |
+| `--evaluate` | off | Compute and store solution quality metrics |
+| `--cluster_fraction=<0..1>` | ~5M clusters | Cap max clusters to `fraction * n` |
+| `--cut_off=<0..1>` | `0.05` | Stop local search when gain < `cutoff * estimated_modularity` |
+| `--ls_time_limit=<seconds>` | `600` | Time limit for local search phase |
+| `--help` | | Print all available options |
+
+### Output files
+
+| File | Description |
+|:-----|:-----------|
+| `<graph>_<mode>.txt` | Clustering assignment (one cluster ID per line, 0-indexed) |
+| `<graph>_<mode>.bin` | FlatBuffer binary with quality metrics, running time, memory usage |
+
+### Example workflow
+
+```bash
+# 1. Cluster a graph in strong mode with 2-minute VieClus time limit
+./deploy/clustre examples/rgg_n_2_15_s0.graph \
+    --one_pass_algorithm=modularity \
+    --ext_clustering_algorithm=VieClus \
+    --ext_algorithm_time=120 \
+    --mode=strong \
+    --evaluate
+
+# 2. Result files:
+#    rgg_n_2_15_s0_strong.txt   (cluster assignments)
+#    rgg_n_2_15_s0_strong.bin   (quality metrics)
+```
+
+---
+
+## Graph Format
+
+CluStRE uses the **METIS graph format**, the same format used by [KaHIP](https://github.com/KaHIP/KaHIP), Metis, Chaco, and the 10th DIMACS Implementation Challenge.
+
+### Input format
+
+A plain text file with `n + 1` lines (excluding comments). Lines starting with `%` are comments.
+
+**Header line:**
+```
+n m [f]
+```
+- `n` = number of vertices, `m` = number of undirected edges
+- `f` = format flag (optional): `0` = unweighted, `1` = edge weights, `10` = node weights, `11` = both
+
+**Vertex lines (one per vertex):**
+```
+v1 [w1] v2 [w2] ...
+```
+where `v_i` are neighbor IDs (**1-indexed**) and `w_i` are edge weights (if `f=1` or `f=11`).
+
+**Example** (4 vertices, 5 edges, unweighted):
+```
+4 5
+2 3
+1 3 4
+1 2 4
+2 3
+```
+
+### Requirements
+- Undirected graph: every edge must appear in both adjacency lists
+- No self-loops or parallel edges
+- Vertex IDs are 1-indexed in the file
+- Edge weights must be strictly positive; vertex weights must be non-negative
+
+### 64-bit support
+CluStRE supports 64-bit vertex and edge IDs by default. To disable, set `64BITMODE` and `64BITVERTEXMODE` to `OFF` in `CMakeLists.txt` and rebuild.
+
+For a full description of the METIS format, see the [KaHIP manual](https://github.com/KaHIP/KaHIP/raw/master/manual/kahip.pdf).
+
+---
+
+## How It Works
+
+CluStRE processes a graph in a streaming fashion, requiring only a fraction of the memory needed by in-memory approaches:
+
+1. **Streaming phase**: Vertices are streamed one by one and assigned to clusters that maximize modularity gain. A quotient graph (cluster-level summary) is built incrementally.
+2. **Quotient graph optimization** (`evo`/`strong` modes): The quotient graph is clustered using [VieClus](https://github.com/KaHIP/VieClus), a memetic algorithm that finds high-quality modularity-optimizing clusterings.
+3. **Restreaming with local search** (`light_plus`/`strong` modes): The graph is re-streamed and vertices are reassigned using local search, refining cluster boundaries based on the improved quotient graph clustering.
+
+This combination achieves over 96% of the quality of in-memory algorithms like Louvain while handling graphs that do not fit in memory.
+
+---
+
+## Building from Source
 
 ### Requirements
 
-* C++-14 ready compiler (g++ version 10+)
-* CMake
-* Argtable (http://argtable.sourceforge.net/)
+- C++20 compiler (g++ 10+)
+- CMake 3.24+
+- MPI (OpenMPI or Intel MPI)
 
-### Building CluStRE
+All other dependencies (VieClus, FlatBuffers, STXXL, KaGen, abseil, robin-hood-hashing) are fetched automatically during the build.
 
-To build the software, run
-```shell
+```bash
+git clone https://github.com/KaHIP/CluStRE.git
+cd CluStRE
 ./compile.sh
 ```
 
-Alternatively, you can use the standard CMake build process.
+The binary is placed in `./deploy/clustre`.
 
-The resulting binary is located in `deploy/clustre`.
-
-## Running CluStRE
-
-To cluster a graph in METIS format using CluStRE, run
-
-```shell
-./clustre <graph filename> --one_pass_algorithm=modularity --ext_clustering_algorithm=VieClus --mode=<mode>
-```
-By default, the algorithm stores the resulting cluster assignments in a file identified by `<graph_name>_<mode>.txt`. More information about the quality of the clustering, such as solution quality, running time, memory usage, etc. is written to a FlatBuffer binary file identified by `<graph_name>_<mode>.bin`. By adding the flag `--output_path=<directory_path>` one can specify where to store the files. If the cluster assignments file is not wanted, it can be disabled with the `--suppress_file_output` flag.
-
-The `--one_pass_algorithm` flag determines which objective function to optimise when streaming. By setting this variable to `modularity`, the algorithm will assign the streamed nodes to a cluster where the modularity gain is the highest. The modularity objective function is built in, but a user can implement other objective functions and use the desired one. 
-
-The `--ext_clustering_algorithm` flag determines which in-memory algorithm to use on the quotient graph once all nodes have been streamed. The `VieClus` evolutionary algorithm is the built-in in-memory graph clustering algorithm, however, as before, a user could integrate and implement other in-memory graph clustering algorithms and use the desired one. By default, the VieClus algorithm runs for an estimated 5 minutes. However, this can be changed by adding the flag `--ext_algorithm_time=<time_in_seconds>`.
-
-By adding in the flag `--evaluate` the solution quality will be calculated and stored in the FlatBuffer file.
-
-The `--mode` flag can be set to various values depending on which mode you wish to select. Each mode clusters the graph differently using different phases. Refer to the following table. 
-
-| mode       | Description                                                         |
-|------------|---------------------------------------------------------------------|
-| light      | One-pass Streaming                                   |
-| light_plus | Streaming + Restream with Local Search |
-| evo        | Streaming + Memetic Quotient Graph Clustering |
-| strong     | Streaming + Memetic Quotient Graph Clustering + Restream with Local Search |
-
-When using the `light_plus` or `strong` mode, the flags `--cut_off=<cut_off_value>` and `--ls_time_limit=<time in seconds>` can restrict the local search phase. By using the --cut_off flag , where cut_off_value is between [0,1], the local search phase will stop when the current round has computed a modularity gain smaller than cut_off_value * estimated_overall_modularity value. The local search could also be time restricted using the `--ls_time_limit=<time in seconds>` flag. The default value for the --cut_off flag is 0.05 and for the --ls_time_limit the default value lies at 600 seconds.
-
-Furthermore, the number of clusters initialised could be capped by using the flag `--cluster_fraction=<cluster_frac_value>`, where cluster_frac_value is between [0,1]. cluster_frac_value * total number of nodes, specifies the maximum number of clusters to initialise during the algorithm. By default, the maximum number of clusters is set to 5 million.
-
-For a complete list of parameters alongside with descriptions, run:
-
-```shell
-./clustre --help
+Alternatively, use the standard CMake process:
+```bash
+mkdir build && cd build
+cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_CXX_FLAGS="-w" ../
+make -j$(nproc)
 ```
 
-Note:
-- The program stores the results of the executed command in a [flatbuffer](https://github.com/google/flatbuffers) `.bin` file identified by `<graph_name>_<mode>.bin`.
-- To Cluster graphs in CluStRE with 64 bit vertex IDs and 64bit edge IDs, edit the CMakeLists.txt file to change `Line 72: option(64BITVERTEXMODE "64 bit mode" OFF)` to
-  `Line 72: option(64BITVERTEXMODE "64 bit mode" ON)`, and `Line 65: option(64BITMODE "64 bit mode" OFF)` to `Line 65: option(64BITMODE "64 bit mode" ON)`, then run `./compile.sh`. By default, 64 bit vertex and edge IDs are enabled. 
+---
 
 ## Data References
-In our work, we performed experiments with graphs sourced from the following repositories:
-- SNAP Dataset: https://snap.stanford.edu/data/
-- DIMACS Implementation Challenge: https://sites.cc.gatech.edu/dimacs10/index.shtml
-- Laboratory for Web Algorithmics: https://law.di.unimi.it/
-- Network Repository: https://networkrepository.com/
-- Torch Geometric: https://pytorch-geometric.readthedocs.io/en/2.6.0/modules/datasets.html
 
-For our experiments, we converted these graphs to the METIS format, while removing parallel edges, self-loops, and directions, and assigning unitary weight to all nodes and edges. For a description of the METIS graph format, please have a look at the [KaHiP manual](https://github.com/KaHIP/KaHIP/raw/master/manual/kahip.pdf).
+Graphs used in our experimental evaluation were sourced from:
+
+| Source | URL |
+|:-------|:----|
+| SNAP Dataset | https://snap.stanford.edu/data/ |
+| 10th DIMACS Implementation Challenge | https://sites.cc.gatech.edu/dimacs10/index.shtml |
+| Laboratory for Web Algorithmics | https://law.di.unimi.it/ |
+| Network Repository | https://networkrepository.com/ |
+| Torch Geometric | https://pytorch-geometric.readthedocs.io/ |
+
+Graphs were converted to METIS format with parallel edges, self-loops, and directions removed, and unit weights assigned to all nodes and edges.
+
+---
+
+## Related Projects
+
+| Project | Description |
+|:--------|:-----------|
+| [VieClus](https://github.com/KaHIP/VieClus) | State-of-the-art memetic algorithm for highest modularity values |
+| [KaHIP](https://github.com/KaHIP/KaHIP) | Karlsruhe High Quality Graph Partitioning (flagship framework) |
+| [HeiStream](https://github.com/KaHIP/HeiStream) | Buffered streaming graph and edge partitioner |
+| [KaHyPar](https://github.com/kahypar) | Karlsruhe Hypergraph Partitioning |
+
+---
+
+## Licence
+
+The program is licenced under MIT licence.
+If you publish results using our algorithms, please acknowledge our work by quoting the following paper:
+
+```
+@article{ChhabraPS25,
+  author    = {Chhabra, Adil and Peretz, Shai Dorian and Schulz, Christian},
+  title     = {{CluStRE: Streaming Graph Clustering with Multi-Stage Refinement}},
+  journal   = {CoRR},
+  volume    = {abs/2502.06879},
+  year      = {2025},
+  url       = {https://arxiv.org/abs/2502.06879}
+}
+```
