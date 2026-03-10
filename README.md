@@ -226,12 +226,15 @@ The program is licenced under MIT licence.
 If you publish results using our algorithms, please acknowledge our work by quoting the following paper:
 
 ```
-@article{ChhabraPS25,
+@inproceedings{ChhabraPS25,
   author    = {Chhabra, Adil and Peretz, Shai Dorian and Schulz, Christian},
   title     = {{CluStRE: Streaming Graph Clustering with Multi-Stage Refinement}},
-  journal   = {CoRR},
-  volume    = {abs/2502.06879},
+  booktitle = {23rd International Symposium on Experimental Algorithms (SEA 2025)},
+  series    = {LIPIcs},
+  volume    = {338},
+  pages     = {11:1--11:20},
+  publisher = {Schloss Dagstuhl -- Leibniz-Zentrum f{\"{u}}r Informatik},
   year      = {2025},
-  url       = {https://arxiv.org/abs/2502.06879}
+  doi       = {10.4230/LIPIcs.SEA.2025.11}
 }
 ```
