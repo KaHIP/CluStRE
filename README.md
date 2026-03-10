@@ -17,7 +17,7 @@ CluStRE v1.0
 
 | | |
 |:--|:--|
-| **What it solves** | Get good graph clusterings fast, or cluster graphs too large to fit in memory |
+| **What it solves** | Get good graph clusterings super fast, or cluster graphs too large to fit in memory |
 | **Objective** | Maximize [modularity](https://en.wikipedia.org/wiki/Modularity_(networks)) via streaming |
 | **Key results** | 89.8% better quality, 2.6x faster, <2/3 memory vs. state-of-the-art streaming; achieves >96% of in-memory quality (Louvain) |
 | **Algorithm** | Streaming assignment + quotient graph optimization + restreaming with local search |
