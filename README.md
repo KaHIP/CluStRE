@@ -13,6 +13,10 @@ CluStRE v1.0
 [![Heidelberg University](https://img.shields.io/badge/Heidelberg-University-c1002a)](https://www.uni-heidelberg.de)
 =====
 
+<p align="center">
+  <img src="./logo/clustre-logo.svg" alt="CluStRE Logo" width="900"/>
+</p>
+
 **CluStRE** (Streaming Graph Clustering with Multi-Stage Refinement) is a streaming graph clustering algorithm that achieves near in-memory quality while using a fraction of the memory. Part of the [KaHIP](https://github.com/KaHIP) organization.
 
 | | |
