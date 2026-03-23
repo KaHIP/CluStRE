@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1d23"/>
+      <stop offset="100%" stop-color="#141720"/>
+    </linearGradient>
+    <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#e74c3c" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#3498db" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-yellow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#f1c40f" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bg-glow1" cx="35%" cy="30%">
+      <stop offset="0%" stop-color="#e74c3c" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#e74c3c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg-glow2" cx="50%" cy="55%">
+      <stop offset="0%" stop-color="#3498db" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#3498db" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg-glow3" cx="25%" cy="75%">
+      <stop offset="0%" stop-color="#f1c40f" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#f1c40f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stream-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#888" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#888" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#888" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- Cluster glows -->
+  <ellipse cx="370" cy="160" rx="200" ry="160" fill="url(#bg-glow1)"/>
+  <ellipse cx="460" cy="340" rx="200" ry="170" fill="url(#bg-glow2)"/>
+  <ellipse cx="250" cy="450" rx="180" ry="140" fill="url(#bg-glow3)"/>
+
+  <!-- Stream flow lines -->
+  <path d="M 10,290 C 50,290 80,250 130,240" stroke="url(#stream-fade)" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+  <path d="M 10,320 C 50,330 80,370 130,390" stroke="url(#stream-fade)" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+  <path d="M 10,305 C 60,305 90,310 140,310" stroke="url(#stream-fade)" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+
+  <!-- Stream nodes (arriving from left) -->
+  <circle cx="20" cy="290" r="4" fill="#666" opacity="0.2"/>
+  <circle cx="38" cy="305" r="4" fill="#777" opacity="0.3"/>
+  <circle cx="56" cy="285" r="5" fill="#888" opacity="0.4"/>
+  <circle cx="74" cy="320" r="5" fill="#888" opacity="0.45"/>
+  <circle cx="92" cy="300" r="6" fill="#999" opacity="0.55"/>
+  <circle cx="112" cy="270" r="6" fill="#999" opacity="0.6"/>
+  <circle cx="128" cy="340" r="7" fill="#aaa" opacity="0.65"/>
+  <circle cx="148" cy="305" r="7" fill="#aaa" opacity="0.7"/>
+
+  <!-- Transitioning nodes -->
+  <circle cx="170" cy="245" r="8" fill="#c0392b" opacity="0.55"/>
+  <circle cx="175" cy="380" r="8" fill="#d4ac0d" opacity="0.55"/>
+  <circle cx="190" cy="310" r="8" fill="#2e86c1" opacity="0.55"/>
+
+  <!-- Red cluster edges -->
+  <line x1="270" y1="110" x2="340" y2="95" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="270" y1="110" x2="240" y2="180" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="270" y1="110" x2="360" y2="175" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="340" y1="95" x2="430" y2="120" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="340" y1="95" x2="360" y2="175" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="240" y1="180" x2="360" y2="175" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="430" y1="120" x2="360" y2="175" stroke="#e74c3c" stroke-width="1.8" stroke-opacity="0.5"/>
+
+  <!-- Blue cluster edges -->
+  <line x1="430" y1="260" x2="500" y2="235" stroke="#3498db" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="430" y1="260" x2="395" y2="340" stroke="#3498db" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="500" y1="235" x2="560" y2="290" stroke="#3498db" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="500" y1="235" x2="395" y2="340" stroke="#3498db" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="395" y1="340" x2="480" y2="365" stroke="#3498db" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="560" y1="290" x2="480" y2="365" stroke="#3498db" stroke-width="1.8" stroke-opacity="0.5"/>
+
+  <!-- Yellow cluster edges -->
+  <line x1="220" y1="410" x2="300" y2="390" stroke="#f1c40f" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="220" y1="410" x2="255" y2="480" stroke="#f1c40f" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="300" y1="390" x2="255" y2="480" stroke="#f1c40f" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="300" y1="390" x2="380" y2="460" stroke="#f1c40f" stroke-width="1.8" stroke-opacity="0.5"/>
+  <line x1="255" y1="480" x2="380" y2="460" stroke="#f1c40f" stroke-width="1.8" stroke-opacity="0.5"/>
+
+  <!-- Inter-cluster edges (dashed) -->
+  <line x1="360" y1="175" x2="430" y2="260" stroke="#888" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+  <line x1="240" y1="180" x2="220" y2="410" stroke="#888" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+  <line x1="480" y1="365" x2="380" y2="460" stroke="#888" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+  <line x1="395" y1="340" x2="300" y2="390" stroke="#888" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+
+  <!-- Red cluster nodes -->
+  <circle cx="270" cy="110" r="12" fill="#e74c3c" filter="url(#glow-red)"/>
+  <circle cx="340" cy="95"  r="12" fill="#e74c3c" filter="url(#glow-red)"/>
+  <circle cx="240" cy="180" r="12" fill="#e74c3c" filter="url(#glow-red)"/>
+  <circle cx="360" cy="175" r="12" fill="#e74c3c" filter="url(#glow-red)"/>
+  <circle cx="430" cy="120" r="12" fill="#e74c3c" filter="url(#glow-red)"/>
+
+  <!-- Blue cluster nodes -->
+  <circle cx="430" cy="260" r="12" fill="#3498db" filter="url(#glow-blue)"/>
+  <circle cx="500" cy="235" r="12" fill="#3498db" filter="url(#glow-blue)"/>
+  <circle cx="395" cy="340" r="12" fill="#3498db" filter="url(#glow-blue)"/>
+  <circle cx="560" cy="290" r="12" fill="#3498db" filter="url(#glow-blue)"/>
+  <circle cx="480" cy="365" r="12" fill="#3498db" filter="url(#glow-blue)"/>
+
+  <!-- Yellow cluster nodes -->
+  <circle cx="220" cy="410" r="12" fill="#f1c40f" filter="url(#glow-yellow)"/>
+  <circle cx="300" cy="390" r="12" fill="#f1c40f" filter="url(#glow-yellow)"/>
+  <circle cx="255" cy="480" r="12" fill="#f1c40f" filter="url(#glow-yellow)"/>
+  <circle cx="380" cy="460" r="12" fill="#f1c40f" filter="url(#glow-yellow)"/>
+
+  <!-- Title -->
+  <text x="700" y="210" font-family="'DejaVu Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="76" font-weight="700" fill="#ffffff" letter-spacing="1">CluStRE</text>
+
+  <!-- Separator -->
+  <line x1="700" y1="235" x2="1220" y2="235" stroke="#334155" stroke-width="2"/>
+
+  <!-- Subtitle -->
+  <text x="700" y="278" font-family="'DejaVu Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="26" fill="#a0a8b4">
+    Streaming Graph Clustering
+  </text>
+
+  <!-- Tagline -->
+  <text x="700" y="335" font-family="'DejaVu Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#607d8b">
+    Multi-stage refinement for near
+  </text>
+  <text x="700" y="363" font-family="'DejaVu Sans', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" fill="#607d8b">
+    in-memory clustering quality
+  </text>
+
+  <!-- Badge: Part of KaHIP -->
+  <rect x="700" y="400" width="150" height="30" rx="15" fill="#263238"/>
+  <text x="775" y="420" font-family="'DejaVu Sans', sans-serif" font-size="14" fill="#80cbc4" text-anchor="middle">Part of KaHIP</text>
+
+  <!-- Legend -->
+  <circle cx="710" cy="500" r="7" fill="#e74c3c"/>
+  <text x="724" y="505" font-family="'DejaVu Sans', sans-serif" font-size="15" fill="#8890a0">Cluster 1</text>
+
+  <circle cx="830" cy="500" r="7" fill="#3498db"/>
+  <text x="844" y="505" font-family="'DejaVu Sans', sans-serif" font-size="15" fill="#8890a0">Cluster 2</text>
+
+  <circle cx="950" cy="500" r="7" fill="#f1c40f"/>
+  <text x="964" y="505" font-family="'DejaVu Sans', sans-serif" font-size="15" fill="#8890a0">Cluster 3</text>
+
+  <circle cx="1076" cy="500" r="5" fill="#999" opacity="0.7"/>
+  <circle cx="1086" cy="500" r="4.5" fill="#888" opacity="0.5"/>
+  <circle cx="1095" cy="500" r="4" fill="#777" opacity="0.35"/>
+  <text x="1106" y="505" font-family="'DejaVu Sans', sans-serif" font-size="15" fill="#8890a0">Stream</text>
+</svg>
