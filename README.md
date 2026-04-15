@@ -19,6 +19,8 @@ CluStRE v1.0
 
 **CluStRE** (Streaming Graph Clustering with Multi-Stage Refinement) is a streaming graph clustering algorithm that achieves near in-memory quality while using a fraction of the memory. Part of the [KaHIP](https://github.com/KaHIP) organization.
 
+> **Python Interface:** An easy-to-use Python interface for this software is available in [CHSZLabLib](https://github.com/CHSZLab/CHSZLabLib).
+
 | | |
 |:--|:--|
 | **What it solves** | Get good graph clusterings super fast, or cluster graphs too large to fit in memory |
